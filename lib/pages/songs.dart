@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'page.dart';
 
 class SongsPage extends StatefulWidget {
   const SongsPage({Key? key}) : super(key: key);
@@ -10,6 +11,6 @@ class SongsPage extends StatefulWidget {
 class _SongsPageState extends State<SongsPage> {
   @override
   Widget build(BuildContext context) {
-    return Text("Hello songs page");
+    return PageTemplate([Text("Hello")], Text("Hello SongsPage"));
   }
 }

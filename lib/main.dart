@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 
@@ -114,18 +115,56 @@ class _MyHomePageState extends State<MyHomePage> {
           onTapped: () => setState(() => index = 4),
         ),
       ),
-      body: NavigationPanelBody(
-          transitionBuilder: (child, animation) {
-            return EntrancePageTransition(child: child, animation: animation);
-          },
-          index: index,
-          children: [
-            ManagePage(),
-            SongsPage(),
-            SetsPage(),
-            PresentPage(),
-            SettingsPage()
-          ]),
+      body: Column(
+        children: [
+          WindowTitleBarBox(
+            child: Row(
+              children: [Expanded(child: MoveWindow()), WindowButtons()],
+            ),
+          ),
+          Expanded(
+            child: NavigationPanelBody(
+                transitionBuilder: (child, animation) {
+                  return EntrancePageTransition(
+                      child: child, animation: animation);
+                },
+                index: index,
+                children: [
+                  ManagePage(),
+                  SongsPage(),
+                  SetsPage(),
+                  PresentPage(),
+                  SettingsPage()
+                ]),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class WindowButtons extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        MinimizeWindowButton(
+          colors: WindowButtonColors(
+            iconNormal: Colors.white,
+          ),
+        ),
+        MaximizeWindowButton(
+          colors: WindowButtonColors(
+            iconNormal: Colors.white,
+          ),
+        ),
+        CloseWindowButton(
+          colors: WindowButtonColors(
+              iconNormal: Colors.white,
+              mouseOver: Colors.red,
+              mouseDown: Colors.red.withAlpha(100)),
+        )
+      ],
     );
   }
 }
