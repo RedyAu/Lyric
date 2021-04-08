@@ -114,13 +114,18 @@ class _MyHomePageState extends State<MyHomePage> {
           onTapped: () => setState(() => index = 4),
         ),
       ),
-      body: NavigationPanelBody(index: index, children: [
-        ManagePage(),
-        SongsPage(),
-        SetsPage(),
-        PresentPage(),
-        SettingsPage()
-      ]),
+      body: NavigationPanelBody(
+          transitionBuilder: (child, animation) {
+            return EntrancePageTransition(child: child, animation: animation);
+          },
+          index: index,
+          children: [
+            ManagePage(),
+            SongsPage(),
+            SetsPage(),
+            PresentPage(),
+            SettingsPage()
+          ]),
     );
   }
 }

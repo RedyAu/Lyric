@@ -10,6 +10,6 @@ class PresentPage extends StatefulWidget {
 class _PresentPageState extends State<PresentPage> {
   @override
   Widget build(BuildContext context) {
-    return Text("Hello manage page");
+    return Text("Hello present page");
   }
 }
