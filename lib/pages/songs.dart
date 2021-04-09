@@ -11,6 +11,11 @@ class SongsPage extends StatefulWidget {
 class _SongsPageState extends State<SongsPage> {
   @override
   Widget build(BuildContext context) {
-    return PageTemplate([Text("Hello")], Text("Hello SongsPage"));
+    return PageTemplate([
+      Button(
+        text: Text("HelloButton"),
+        onPressed: () {},
+      )
+    ], Text("Hello SongsPage"));
   }
 }

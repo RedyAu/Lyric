@@ -1,11 +1,7 @@
-import 'dart:ui' as ui;
-
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/foundation.dart';
 
 import 'package:provider/provider.dart';
-import 'package:system_theme/system_theme.dart';
 
 import 'pages/manage.dart';
 import 'pages/songs.dart';
@@ -13,7 +9,7 @@ import 'pages/sets.dart';
 import 'pages/present.dart';
 import 'pages/settings.dart';
 
-import 'utils/theme.dart';
+//import 'utils/theme.dart';
 
 late bool darkMode;
 
@@ -23,14 +19,7 @@ void main() async {
   //   - Windows
   //   - Web
   //   - Android
-  if (defaultTargetPlatform == TargetPlatform.windows ||
-      defaultTargetPlatform == TargetPlatform.android ||
-      kIsWeb) {
-    darkMode = await SystemTheme.darkMode;
-    await SystemTheme.accentInstance.load();
-  } else {
-    darkMode = true;
-  }
+  darkMode = true;
   runApp(MyApp());
 }
 
@@ -39,28 +28,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AppTheme(),
-      builder: (context, _) {
-        final appTheme = context.watch<AppTheme>();
-        return FluentApp(
-          title: 'Lyric',
-          themeMode: appTheme.mode,
-          debugShowCheckedModeBanner: false,
-          initialRoute: '/',
-          routes: {
-            '/': (_) => MyHomePage(),
-          },
-          style: Style(
-            accentColor: SystemTheme.accentInstance.accent,
-            brightness: appTheme.mode == ThemeMode.system
-                ? darkMode
-                    ? Brightness.dark
-                    : Brightness.light
-                : null,
-          ),
-        );
+    return FluentApp(
+      title: 'Lyric',
+      themeMode: ThemeMode.dark,
+      debugShowCheckedModeBanner: false,
+      initialRoute: '/',
+      routes: {
+        '/': (_) => MyHomePage(),
       },
+      //style: Style(accentColor: Colors.blue, brightness: Brightness.dark),
     );
   }
 }
@@ -83,7 +59,8 @@ class _MyHomePageState extends State<MyHomePage> {
       left: NavigationPanel(
         menu: NavigationPanelMenuItem(
           icon: Icon(Icons.menu),
-          label: Text('Lyric'),
+          label: Text('Lyric',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         ),
         currentIndex: index,
         items: [
@@ -115,27 +92,25 @@ class _MyHomePageState extends State<MyHomePage> {
           onTapped: () => setState(() => index = 4),
         ),
       ),
-      body: Column(
+      body: Stack(
         children: [
+          NavigationPanelBody(
+              //transitionBuilder: (child, animation) {
+              //  return EntrancePageTransition(
+              //      child: child, animation: animation);
+              //},
+              index: index,
+              children: [
+                ManagePage(),
+                SongsPage(),
+                SetsPage(),
+                PresentPage(),
+                SettingsPage()
+              ]),
           WindowTitleBarBox(
             child: Row(
-              children: [Expanded(child: MoveWindow()), WindowButtons()],
+              children: [Spacer(), WindowButtons()],
             ),
-          ),
-          Expanded(
-            child: NavigationPanelBody(
-                transitionBuilder: (child, animation) {
-                  return EntrancePageTransition(
-                      child: child, animation: animation);
-                },
-                index: index,
-                children: [
-                  ManagePage(),
-                  SongsPage(),
-                  SetsPage(),
-                  PresentPage(),
-                  SettingsPage()
-                ]),
           ),
         ],
       ),
