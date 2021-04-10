@@ -2,6 +2,7 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:lyric/data/data.dart';
 
 import 'pages/manage.dart';
 import 'pages/songs.dart';
@@ -52,6 +53,12 @@ class _MyHomePageState extends State<MyHomePage> {
   bool value = false;
 
   int index = 0;
+
+  @override
+  void initState() {
+    Data().sync();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
