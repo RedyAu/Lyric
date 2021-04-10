@@ -1,7 +1,7 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-import 'package:provider/provider.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 import 'pages/manage.dart';
 import 'pages/songs.dart';
@@ -58,36 +58,36 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       left: NavigationPanel(
         menu: NavigationPanelMenuItem(
-          icon: Icon(Icons.menu),
+          icon: Icon(FeatherIcons.menu),
           label: Text('Lyric',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         ),
         currentIndex: index,
         items: [
           NavigationPanelItem(
-            icon: Icon(Icons.pan_tool_rounded),
+            icon: Icon(FeatherIcons.folder),
             label: Text('Manage'),
             onTapped: () => setState(() => index = 0),
           ),
           NavigationPanelItem(
-            icon: Icon(Icons.music_note_rounded),
+            icon: Icon(FeatherIcons.music),
             label: Text('Songs'),
             onTapped: () => setState(() => index = 1),
           ),
           NavigationPanelItem(
-            icon: Icon(Icons.list),
+            icon: Icon(FeatherIcons.columns),
             label: Text('Sets'),
             onTapped: () => setState(() => index = 2),
           ),
           NavigationPanelTileSeparator(),
           NavigationPanelItem(
-              icon: Icon(Icons.personal_video_rounded),
+              icon: Icon(FeatherIcons.monitor),
               label: Text('Present'),
               onTapped: () => setState(() => index = 3)),
         ],
         bottom: NavigationPanelItem(
           // selected: index == 3,
-          icon: Icon(Icons.settings),
+          icon: Icon(FeatherIcons.settings),
           label: Text('Settings'),
           onTapped: () => setState(() => index = 4),
         ),
