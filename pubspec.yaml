@@ -1,6 +1,8 @@
 name: lyric
 description: Project Lyrics. But better.
 
+publish_to: none
+
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
 
@@ -24,7 +26,10 @@ dependencies:
     sdk: flutter
 
 #  fluentui_system_icons: ^1.1.116
-  fluent_ui: ^1.7.3
+  fluent_ui:
+    git:
+      url: https://github.com/RedyAu/fluent_ui.git
+
   flutter_feather_icons: ^2.0.0
   provider: ^5.0.0
   system_theme: ^1.0.0

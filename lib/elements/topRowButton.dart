@@ -19,11 +19,11 @@ class TopRowButton extends StatelessWidget {
       text: Row(
         children: [
           if (icon != null)
-            Padding(
-              padding: const EdgeInsets.only(right: 4),
+            Container(
+              padding: EdgeInsets.only(right: 4),
               child: Icon(
                 icon,
-                size: 20,
+                size: 18,
               ),
             ),
           Text(text)
@@ -31,7 +31,9 @@ class TopRowButton extends StatelessWidget {
       ),
       style: ButtonStyle(
           decoration: (buttonState) => BoxDecoration(
-              color: (color == null) ? Colors.grey : color!.withAlpha(60),
+              color: (color == null)
+                  ? Colors.grey.withAlpha(buttonState.isHovering ? 30 : 255)
+                  : color!.withAlpha(buttonState.isHovering ? 30 : 80),
               borderRadius: BorderRadius.circular(4),
               border: Border.all(
                   color: (color == null)
