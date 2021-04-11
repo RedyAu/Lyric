@@ -5,10 +5,10 @@ import 'package:path/path.dart';
 
 class FileSystemButton extends StatelessWidget {
   final bool checked;
-  final Folder folder;
+  final element;
   final Function onChanged;
 
-  FileSystemButton(this.checked, this.folder, this.onChanged);
+  FileSystemButton(this.checked, this.element, this.onChanged);
 
   @override
   Widget build(BuildContext context) {
@@ -38,16 +38,23 @@ class FileSystemButton extends StatelessWidget {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(right: 5),
-                        child: Icon(FeatherIcons.folder),
+                        child: Icon((element is Folder)
+                            ? FeatherIcons.folder
+                            : ((element is Song)
+                                ? FeatherIcons.music
+                                : FeatherIcons.columns)),
                       ),
-                      Text(basename(folder.directory.path)),
+                      Text(basename(element is Folder
+                              ? element.directory.path
+                              : element.file.path)
+                          .split(".")[0]),
                       Spacer(),
                       if (checked) Icon(FeatherIcons.chevronRight)
                     ],
                   )));
         },
         onPressed: () {
-          onChanged(folder);
+          onChanged(element);
         },
       ),
     );

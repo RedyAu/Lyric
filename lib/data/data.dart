@@ -14,6 +14,7 @@ class Data {
     //!List root dir to get all folders
     for (var entity in dataDir.listSync().where((e) => e is Directory)) {
       directories.add(Directory(entity.path));
+      print("added dir " + entity.path);
     }
 
     for (Directory dir in directories) {
@@ -28,14 +29,10 @@ class Data {
         } else if (isSet(file)) {
           sets.add(Set(file));
         }
-
-        folders.add(Folder(dir, songs, sets));
       }
-    }
 
-    folders.forEach((element) {
-      print(element.directory);
-    });
+      folders.add(Folder(dir, songs, sets));
+    }
 
     return true;
   }

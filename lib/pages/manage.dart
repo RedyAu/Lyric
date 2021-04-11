@@ -21,13 +21,20 @@ Folder testFolder3 = Folder(Directory("Lyric3"), [], []);
 class _ManagePageState extends State<ManagePage> {
   List<Widget> fileWidgets = [];
 
-  File? selectedFile;
+  var selectedFile;
   Folder? selectedFolder;
 
   void folderCallback(Folder folder) {
     setState(() {
       selectedFolder = folder;
+      selectedFile = null;
       print(selectedFolder!.directory); //TODO Removeme
+    });
+  }
+
+  void fileCallback(var file) {
+    setState(() {
+      selectedFile = file;
     });
   }
 
@@ -39,12 +46,28 @@ class _ManagePageState extends State<ManagePage> {
       )
     ];
     for (var folder in data.folders) {
-      folderWidgets
-          .add(FileSystemButton(selectedFolder == folder, folder, folderCallback));
+      folderWidgets.add(
+          FileSystemButton(selectedFolder == folder, folder, folderCallback));
       print("Added " + folder.directory.toString());
     }
 
     return folderWidgets;
+  }
+
+  List<Widget> buildFiles(Folder inFolder) {
+    print("Build files");
+    List<Widget> fileWidgets = [Container(height: 4)];
+    for (var song in data.folders
+        .firstWhere((folder) => folder == selectedFolder)
+        .songs) {
+      fileWidgets
+          .add(FileSystemButton(selectedFile == song, song, fileCallback));
+    }
+    for (var set
+        in data.folders.firstWhere((folder) => folder == selectedFolder).sets) {
+      fileWidgets.add(FileSystemButton(selectedFile == set, set, fileCallback));
+    }
+    return fileWidgets;
   }
 
   @override
@@ -80,17 +103,39 @@ class _ManagePageState extends State<ManagePage> {
               children: buildFolders(),
             ),
           ),
-          Container(
+          AnimatedContainer(
+              duration: Theme.of(context).mediumAnimationDuration!,
               width: 5,
-              color: Theme.of(context).navigationPanelBackgroundColor),
-          Expanded(child: Container())
+              color: selectedFolder != null
+                  ? Color.fromARGB(255, 80, 80, 80)
+                  : Theme.of(context).navigationPanelBackgroundColor),
+          Expanded(
+              child: selectedFolder != null
+                  ? ListView(
+                      children: buildFiles(selectedFolder!),
+                    )
+                  : Center(
+                      child: Text(
+                        "Choose a folder",
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 100, 100, 100),
+                            fontSize: 15,
+                            fontStyle: FontStyle.italic),
+                      ),
+                    ))
         ],
       ),
       rightPane: selectedFile == null
           ? Center(
-              child: Text("Selected item details pane",
-                  style: TextStyle(fontSize: 25)))
-          : null,
+              child: Text(
+                "Choose a file",
+                style: TextStyle(
+                    color: Color.fromARGB(255, 100, 100, 100),
+                    fontSize: 15,
+                    fontStyle: FontStyle.italic),
+              ),
+            )
+          : Text(selectedFile.file.readAsStringSync()),
     );
   }
 }
