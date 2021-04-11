@@ -3,6 +3,8 @@ import 'package:path/path.dart';
 
 final Directory dataDir = Directory("Lyric"); //TODO Make configurable
 
+Data data = Data();
+
 class Data {
   List<Folder> folders = [];
 
@@ -31,8 +33,8 @@ class Data {
       }
     }
 
-    directories.forEach((element) {
-      print(element);
+    folders.forEach((element) {
+      print(element.directory);
     });
 
     return true;

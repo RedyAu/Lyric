@@ -32,8 +32,8 @@ class TopRowButton extends StatelessWidget {
       style: ButtonStyle(
           decoration: (buttonState) => BoxDecoration(
               color: (color == null)
-                  ? Colors.grey.withAlpha(buttonState.isHovering ? 30 : 255)
-                  : color!.withAlpha(buttonState.isHovering ? 30 : 80),
+                  ? Colors.grey.withAlpha(buttonState.isHovering ? 180 : 255)
+                  : color!.withAlpha(buttonState.isHovering ? 50 : 80),
               borderRadius: BorderRadius.circular(4),
               border: Border.all(
                   color: (color == null)

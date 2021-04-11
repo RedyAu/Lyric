@@ -97,7 +97,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: db50352f35df39f437f583c941a3984612b51d04
+      resolved-ref: "418dd7c4b1bdf3cbc8c3f191361d80a666554b64"
       url: "https://github.com/RedyAu/fluent_ui.git"
     source: git
     version: "1.7.4"

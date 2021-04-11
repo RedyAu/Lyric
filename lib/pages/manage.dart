@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/gestures.dart';
 import 'package:lyric/data/data.dart';
+import 'package:lyric/elements/fileSystemButton.dart';
 import 'package:lyric/elements/topRowButton.dart';
 import 'page.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -19,13 +19,39 @@ Folder testFolder2 = Folder(Directory("Lyric2"), [], []);
 Folder testFolder3 = Folder(Directory("Lyric3"), [], []);
 
 class _ManagePageState extends State<ManagePage> {
+  List<Widget> fileWidgets = [];
+
   File? selectedFile;
   Folder? selectedFolder;
 
   void folderCallback(Folder folder) {
     setState(() {
       selectedFolder = folder;
+      print(selectedFolder!.directory); //TODO Removeme
     });
+  }
+
+  List<Widget> buildFolders() {
+    print("build folders");
+    List<Widget> folderWidgets = [
+      Container(
+        height: 4,
+      )
+    ];
+    for (var folder in data.folders) {
+      folderWidgets
+          .add(FileSystemButton(selectedFolder == folder, folder, folderCallback));
+      print("Added " + folder.directory.toString());
+    }
+
+    return folderWidgets;
+  }
+
+  @override
+  void initState() {
+    buildFolders();
+    print("Manage init");
+    super.initState();
   }
 
   @override
@@ -50,22 +76,8 @@ class _ManagePageState extends State<ManagePage> {
       body: Row(
         children: [
           Expanded(
-            child: Column(
-              //crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                ConstrainedBox(
-                  constraints: BoxConstraints(maxHeight: 50),
-                  child: Flex(
-                    direction: Axis.horizontal,
-                    children: [
-                      Expanded(
-                        child: FolderButton(selectedFolder == testFolder,
-                            testFolder, folderCallback),
-                      )
-                    ],
-                  ),
-                ),
-              ],
+            child: ListView(
+              children: buildFolders(),
             ),
           ),
           Container(
@@ -80,35 +92,5 @@ class _ManagePageState extends State<ManagePage> {
                   style: TextStyle(fontSize: 25)))
           : null,
     );
-  }
-}
-
-class FolderButton extends StatelessWidget {
-  final bool checked;
-  final Folder folder;
-  final Function onChanged;
-
-  FolderButton(this.checked, this.folder, this.onChanged);
-
-  @override
-  Widget build(BuildContext context) {
-    return Button(
-        text: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(right: 4, bottom: 2),
-                child: Icon(
-                  FeatherIcons.folder,
-                  size: 18,
-                ),
-              ),
-              Text("Hello"),
-            ]),
-        onPressed: () {
-          onChanged(folder);
-          print(checked);
-        });
   }
 }
