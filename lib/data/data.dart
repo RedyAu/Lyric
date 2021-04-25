@@ -9,6 +9,10 @@ class Data {
   List<Folder> folders = [];
 
   Future<bool> sync() async {
+    print("Syncing...");
+
+    folders = [];
+
     List<Directory> directories = [dataDir]; //!Init dir list and add root
 
     //!List root dir to get all folders
@@ -18,52 +22,54 @@ class Data {
     }
 
     for (Directory dir in directories) {
-      List<Song> songs = [];
-      List<Set> sets = [];
-
-      for (var entity in dir.listSync().where((e) => e is File)) {
-        File file = File(entity.path);
-
-        if (isSong(file)) {
-          songs.add(Song(file));
-        } else if (isSet(file)) {
-          sets.add(Set(file));
-        }
-      }
-
-      folders.add(Folder(dir, songs, sets));
+      folders.add(buildFolder(dir));
     }
-
+    print("Sync complete!");
     return true;
   }
+}
 
-  bool isSong(File file) {
-    return (extension(file.path) == ".lsong");
+Folder buildFolder(Directory dir) {
+  List<Song> songs = [];
+  List<Set> sets = [];
+
+  for (FileSystemEntity entity in dir.listSync().where((e) => e is File)) {
+    File file = File(entity.path);
+
+    if (isSong(file)) {
+      songs.add(Song(file));
+    } else if (isSet(file)) {
+      sets.add(Set(file));
+    }
   }
 
-  bool isSet(File file) {
-    return (extension(file.path) == ".lset");
-  }
+  return Folder(dir, songs, sets);
+}
+
+bool isSong(File file) {
+  return (extension(file.path) == ".lsong");
+}
+
+bool isSet(File file) {
+  return (extension(file.path) == ".lset");
 }
 
 class Folder {
-  Directory directory;
+  Directory fileEntity;
   List<Song> songs;
   List<Set> sets;
 
-  Folder(this.directory, this.songs, this.sets);
+  Folder(this.fileEntity, this.songs, this.sets);
 }
 
 class Song {
-  File file;
-  String name = "";
+  File fileEntity;
 
-  Song(this.file);
+  Song(this.fileEntity);
 }
 
 class Set {
-  File file;
-  String name = "";
+  File fileEntity;
 
-  Set(this.file);
+  Set(this.fileEntity);
 }

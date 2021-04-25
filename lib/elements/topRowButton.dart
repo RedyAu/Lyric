@@ -16,7 +16,7 @@ class TopRowButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Button(
-      text: Row(
+      child: Row(
         children: [
           if (icon != null)
             Container(

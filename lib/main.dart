@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FluentApp(
+      style: Style(),
       title: 'Lyric',
       themeMode: ThemeMode.dark,
       debugShowCheckedModeBanner: false,

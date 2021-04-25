@@ -44,11 +44,13 @@ class FileSystemButton extends StatelessWidget {
                                 ? FeatherIcons.music
                                 : FeatherIcons.columns)),
                       ),
-                      Text(basename(element is Folder
-                              ? element.directory.path
-                              : element.file.path)
-                          .split(".")[0]),
-                      Spacer(),
+                      Expanded(
+                        child: Text(
+                          basename(element.fileEntity.path).split(".")[0],
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
+                        ),
+                      ),
                       if (checked) Icon(FeatherIcons.chevronRight)
                     ],
                   )));

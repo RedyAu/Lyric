@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lyric/data/data.dart';
+import 'package:lyric/data/fileActions.dart';
 import 'package:lyric/elements/fileSystemButton.dart';
 import 'package:lyric/elements/topRowButton.dart';
 import 'page.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:path/path.dart';
 
 class ManagePage extends StatefulWidget {
   const ManagePage({Key? key}) : super(key: key);
@@ -13,10 +15,6 @@ class ManagePage extends StatefulWidget {
   @override
   _ManagePageState createState() => _ManagePageState();
 }
-
-Folder testFolder = Folder(Directory("Lyric"), [], []);
-Folder testFolder2 = Folder(Directory("Lyric2"), [], []);
-Folder testFolder3 = Folder(Directory("Lyric3"), [], []);
 
 class _ManagePageState extends State<ManagePage> {
   List<Widget> fileWidgets = [];
@@ -28,7 +26,6 @@ class _ManagePageState extends State<ManagePage> {
     setState(() {
       selectedFolder = folder;
       selectedFile = null;
-      print(selectedFolder!.directory); //TODO Removeme
     });
   }
 
@@ -48,7 +45,7 @@ class _ManagePageState extends State<ManagePage> {
     for (var folder in data.folders) {
       folderWidgets.add(
           FileSystemButton(selectedFolder == folder, folder, folderCallback));
-      print("Added " + folder.directory.toString());
+      print("Added " + folder.fileEntity.toString());
     }
 
     return folderWidgets;
@@ -96,6 +93,33 @@ class _ManagePageState extends State<ManagePage> {
           icon: FeatherIcons.folderPlus,
         )
       ],
+      rightActions: [
+        selectedFolder != null
+            ? selectedFile != null
+                ? TopRowButton(
+                    text: "Rename file",
+                    icon: FeatherIcons.edit3,
+                    color: Colors.green,
+                    onPressed: () {})
+                : TopRowButton(
+                    text: "Rename folder",
+                    icon: FeatherIcons.edit,
+                    color: Colors.teal,
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return RenameDialog(toRename: selectedFolder);
+                          }).then((renamed) => setState(() {
+                            renamed is Folder
+                                ? selectedFolder = renamed
+                                : selectedFile = renamed;
+                            print(renamed.fileEntity);
+                            buildFolders();
+                          }));
+                    })
+            : Container()
+      ],
       body: Row(
         children: [
           Expanded(
@@ -135,7 +159,66 @@ class _ManagePageState extends State<ManagePage> {
                     fontStyle: FontStyle.italic),
               ),
             )
-          : Text(selectedFile.file.readAsStringSync()),
+          : Text(selectedFile.fileEntity.readAsStringSync()),
+    );
+  }
+}
+
+class RenameDialog extends StatefulWidget {
+  final toRename;
+
+  RenameDialog({required this.toRename});
+
+  @override
+  _RenameDialogState createState() => _RenameDialogState();
+}
+
+class _RenameDialogState extends State<RenameDialog> {
+  TextEditingController? newNameController;
+  @override
+  void initState() {
+    newNameController = TextEditingController.fromValue(
+        TextEditingValue(text: basename(widget.toRename.fileEntity.path)));
+
+    super.initState();
+  }
+
+  File? renamedFile;
+  Directory? renamedFolder;
+
+  @override
+  Widget build(BuildContext context) {
+    return ContentDialog(
+      title: Text("Átnevezés"),
+      content: Column(
+        children: [
+          TextBox(
+            autofocus: true,
+            controller: newNameController,
+          ) //Display just path
+        ],
+      ),
+      actions: [
+        Button(
+            child: Text("Átnevezés"),
+            onPressed: () {
+              widget.toRename.fileEntity is File
+                  ? renamedFile = renameFile(
+                      widget.toRename.fileEntity, newNameController!.text)
+                  : renamedFolder = renameDirectory(
+                      widget.toRename.fileEntity, newNameController!.text);
+              data.sync().then((value) => Navigator.of(context).pop(renamedFile ==
+                      null
+                  ? data.folders.firstWhere((element) =>
+                      element.fileEntity.path == renamedFolder!.path)
+                  : renamedFile!)); //TODO implement returning the actual file in the tree
+            }),
+        Button(
+            child: Text("Mégse"),
+            onPressed: () {
+              Navigator.pop(context);
+            })
+      ],
     );
   }
 }

@@ -14,14 +14,14 @@ packages:
       name: bitsdojo_window
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.0"
+    version: "0.1.0+1"
   bitsdojo_window_linux:
     dependency: transitive
     description:
       name: bitsdojo_window_linux
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.0"
+    version: "0.1.0+1"
   bitsdojo_window_macos:
     dependency: transitive
     description:
@@ -95,12 +95,10 @@ packages:
   fluent_ui:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "418dd7c4b1bdf3cbc8c3f191361d80a666554b64"
-      url: "https://github.com/RedyAu/fluent_ui.git"
-    source: git
-    version: "1.7.4"
+      name: fluent_ui
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.8.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -165,6 +163,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
+  pedantic:
+    dependency: transitive
+    description:
+      name: pedantic
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.11.0"
   plugin_platform_interface:
     dependency: transitive
     description:
@@ -254,6 +259,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  watcher:
+    dependency: "direct main"
+    description:
+      name: watcher
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   win32:
     dependency: transitive
     description:
