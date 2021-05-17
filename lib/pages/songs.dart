@@ -37,9 +37,9 @@ class _SongsPageState extends State<SongsPage> {
             onPressed: () {})
       ],
       body: Center(child: Text("Song editor", style: TextStyle(fontSize: 25))),
-      rightPane: Center(
+      /*rightPane: Center(
           child:
-              Text("Song editor details pane", style: TextStyle(fontSize: 25))),
+              Text("Song editor details pane", style: TextStyle(fontSize: 25))),*/
     );
   }
 }

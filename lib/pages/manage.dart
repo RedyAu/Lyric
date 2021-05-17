@@ -10,8 +10,10 @@ import 'page.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:path/path.dart';
 
+// ignore: must_be_immutable
 class ManagePage extends StatefulWidget {
-  const ManagePage({Key? key}) : super(key: key);
+  Function updateTopRowButtons;
+  ManagePage(this.updateTopRowButtons, {Key? key}) : super(key: key);
 
   @override
   _ManagePageState createState() => _ManagePageState();
@@ -123,48 +125,63 @@ class _ManagePageState extends State<ManagePage> {
                     })
             : Container()
       ],
-      body: Row(
-        children: [
-          Expanded(
-            child: ListView(
-              children: buildFolders(),
-            ),
-          ),
-          AnimatedContainer(
-              duration: FluentTheme.of(context).mediumAnimationDuration,
-              width: 5,
-              color: lyric.selectedFolder != null
-                  ? Color.fromARGB(255, 80, 80, 80)
-                  : FluentTheme.of(context)
-                      .navigationPaneTheme
-                      .backgroundColor),
-          Expanded(
-              child: lyric.selectedFolder != null
-                  ? ListView(
-                      children: buildFiles(lyric.selectedFolder!),
-                    )
-                  : Center(
-                      child: Text(
-                        "Choose a folder",
-                        style: TextStyle(
-                            color: Color.fromARGB(255, 100, 100, 100),
-                            fontSize: 15,
-                            fontStyle: FontStyle.italic),
-                      ),
-                    ))
-        ],
-      ),
-      rightPane: lyric.selectedFile == null
-          ? Center(
-              child: Text(
-                "Choose a file",
-                style: TextStyle(
-                    color: Color.fromARGB(255, 100, 100, 100),
-                    fontSize: 15,
-                    fontStyle: FontStyle.italic),
+      body: Expanded(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              flex: 2,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: ListView(
+                      children: buildFolders(),
+                    ),
+                  ),
+                  AnimatedContainer(
+                      duration: FluentTheme.of(context).mediumAnimationDuration,
+                      width: 5,
+                      color: lyric.selectedFolder != null
+                          ? Color.fromARGB(255, 80, 80, 80)
+                          : FluentTheme.of(context)
+                              .navigationPaneTheme
+                              .backgroundColor),
+                  Expanded(
+                      child: lyric.selectedFolder != null
+                          ? ListView(
+                              children: buildFiles(lyric.selectedFolder!),
+                            )
+                          : Center(
+                              child: Text(
+                                "Choose a folder",
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 100, 100, 100),
+                                    fontSize: 15,
+                                    fontStyle: FontStyle.italic),
+                              ),
+                            ))
+                ],
               ),
-            )
-          : Text(lyric.selectedFile.fileEntity.readAsStringSync()),
+            ),
+            Expanded(
+                flex: 1,
+                child: Container(
+                  color: Colors.grey[200],
+                  child: lyric.selectedFile == null
+                      ? Center(
+                          child: Text(
+                            "Choose a file",
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 100, 100, 100),
+                                fontSize: 15,
+                                fontStyle: FontStyle.italic),
+                          ),
+                        )
+                      : Text(lyric.selectedFile.fileEntity.readAsStringSync()),
+                )),
+          ],
+        ),
+      ),
     );
   }
 }

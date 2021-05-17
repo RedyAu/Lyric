@@ -39,9 +39,9 @@ class _SetsPageState extends State<SetsPage> {
             onPressed: () {})
       ],
       body: Center(child: Text("Set editor", style: TextStyle(fontSize: 25))),
-      rightPane: Center(
+      /*rightPane: Center(
           child: Text("Properties pane\nfor selected item in Set",
-              style: TextStyle(fontSize: 25))),
+              style: TextStyle(fontSize: 25))),*/
     );
   }
 }

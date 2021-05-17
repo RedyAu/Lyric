@@ -24,7 +24,7 @@ class _PresentPageState extends State<PresentPage> {
       ],
       body:
           Center(child: Text("Service order", style: TextStyle(fontSize: 25))),
-      rightPane: Center(child: Text("Actions", style: TextStyle(fontSize: 25))),
+      //rightPane: Center(child: Text("Actions", style: TextStyle(fontSize: 25))),
     );
   }
 }

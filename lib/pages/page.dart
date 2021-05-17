@@ -6,21 +6,15 @@ class PageTemplate extends StatelessWidget {
   final List<Widget>? rightActions;
   final List<Widget>? leftActions;
   final Widget body;
-  final Widget? rightPane;
 
-  PageTemplate(
-      {this.leftActions,
-      this.rightActions,
-      required this.body,
-      this.rightPane});
+  PageTemplate({this.leftActions, this.rightActions, required this.body});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Column(
+    return Column(
       children: [
         Container(
-          color: FluentTheme.of(context).navigationPaneTheme.backgroundColor,
+          color: Colors.grey[200],
           height: 41,
           child: Row(
             children: [
@@ -40,7 +34,8 @@ class PageTemplate extends StatelessWidget {
             ],
           ),
         ),
-        (rightPane == null)
+        body,
+        /*(rightPane == null)
             ? Expanded(child: body)
             : Expanded(
                 child: Row(
@@ -58,8 +53,8 @@ class PageTemplate extends StatelessWidget {
                                 child: rightPane!)))
                   ],
                 ),
-              )
+              )*/
       ],
-    ));
+    );
   }
 }
