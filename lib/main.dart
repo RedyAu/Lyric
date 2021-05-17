@@ -55,24 +55,15 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool value = false;
 
+  bool ready = false;
+
   int index = 0;
-
-  List<Widget> rightButtons = [];
-  List<Widget> leftButtons = [];
-
-  void updateButtonsCallback(
-      {List<Widget>? rightButtons, List<Widget>? leftButtons}) {
-    setState(() {
-      this.rightButtons = [];
-      this.rightButtons.addAll(rightButtons ?? []);
-      this.leftButtons = [];
-      this.leftButtons.addAll(leftButtons ?? []);
-    });
-  }
 
   @override
   void initState() {
-    data.sync();
+    data.sync().then((value) => setState(() {
+          ready = true;
+        }));
     super.initState();
   }
 
@@ -80,77 +71,80 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        NavigationView(
-          useAcrylic: false,
-          pane: NavigationPane(
-            selected: index,
-            onChanged: (i) => setState(() => index = i),
-            displayMode: PaneDisplayMode.auto,
-            header: Text('Lyric',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            items: [
-              PaneItem(
-                icon: Icon(FeatherIcons.folder),
-                title: 'Manage',
-              ),
-              PaneItem(
-                icon: Icon(FeatherIcons.music),
-                title: 'Songs',
-              ),
-              PaneItem(
-                icon: Icon(FeatherIcons.columns),
-                title: 'Sets',
-              ),
-              PaneItemSeparator(),
-              PaneItem(
-                icon: Icon(FeatherIcons.monitor),
-                title: 'Present',
+        !ready
+            ? Center(
+                child: ProgressRing(),
               )
-            ],
-            footerItems: [
-              PaneItem(
-                icon: Icon(FeatherIcons.settings),
-                title: 'Settings',
+            : NavigationView(
+                useAcrylic: false,
+                pane: NavigationPane(
+                  selected: index,
+                  onChanged: (i) => setState(() => index = i),
+                  displayMode: PaneDisplayMode.auto,
+                  header: Text('Lyric',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  items: [
+                    PaneItem(
+                      icon: Icon(FeatherIcons.folder),
+                      title: 'Manage',
+                    ),
+                    PaneItem(
+                      icon: Icon(FeatherIcons.music),
+                      title: 'Songs',
+                    ),
+                    PaneItem(
+                      icon: Icon(FeatherIcons.columns),
+                      title: 'Sets',
+                    ),
+                    PaneItemSeparator(),
+                    PaneItem(
+                      icon: Icon(FeatherIcons.monitor),
+                      title: 'Present',
+                    )
+                  ],
+                  footerItems: [
+                    PaneItem(
+                      icon: Icon(FeatherIcons.settings),
+                      title: 'Settings',
+                    ),
+                  ],
+                  indicatorBuilder: ({
+                    required BuildContext context,
+                    int? index,
+                    required List<Offset> Function() offsets,
+                    required List<Size> Function() sizes,
+                    required Axis axis,
+                    required Widget child,
+                  }) {
+                    if (index == null) return child;
+                    assert(debugCheckHasFluentTheme(context));
+                    final theme = NavigationPaneThemeData.of(context);
+                    return StickyNavigationIndicator(
+                      index: index,
+                      offsets: offsets,
+                      sizes: sizes,
+                      child: child,
+                      color: theme.highlightColor,
+                      curve: theme.animationCurve ?? Curves.linear,
+                      axis: axis,
+                    );
+                  },
+                ),
+                content: NavigationBody(index: index, children: [
+                  ManagePage(),
+                  SongsPage(),
+                  SetsPage(),
+                  PresentPage(),
+                  SettingsPage()
+                ]),
               ),
-            ],
-            indicatorBuilder: ({
-              required BuildContext context,
-              int? index,
-              required List<Offset> Function() offsets,
-              required List<Size> Function() sizes,
-              required Axis axis,
-              required Widget child,
-            }) {
-              if (index == null) return child;
-              assert(debugCheckHasFluentTheme(context));
-              final theme = NavigationPaneThemeData.of(context);
-              return StickyNavigationIndicator(
-                index: index,
-                offsets: offsets,
-                sizes: sizes,
-                child: child,
-                color: theme.highlightColor,
-                curve: theme.animationCurve ?? Curves.linear,
-                axis: axis,
-              );
-            },
-          ),
-          content: NavigationBody(index: index, children: [
-            ManagePage(updateButtonsCallback),
-            SongsPage(),
-            SetsPage(),
-            PresentPage(),
-            SettingsPage()
-          ]),
-        ),
         Container(
           child: Container(
             height: 40,
             child: Row(
               children: [
-                Expanded(
-                  child: MoveWindow(),
-                ),
+                Spacer(),
                 Align(
                   child: WindowButtons(),
                   alignment: Alignment.topRight,

@@ -12,7 +12,8 @@ class FileSystemButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 100),
       margin: EdgeInsets.only(left: 4, bottom: 4, right: checked ? 0 : 3),
       height: 30,
       child: HoverButton(
@@ -22,9 +23,9 @@ class FileSystemButton extends StatelessWidget {
               child: AnimatedContainer(
                   decoration: BoxDecoration(
                       color: (buttonStates.isHovering)
-                          ? Color.fromARGB(255, 100, 100, 100)
+                          ? Colors.grey[120]
                           : checked
-                              ? Color.fromARGB(255, 80, 80, 80)
+                              ? Colors.grey[130]
                               : Colors.grey,
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(4),
@@ -33,7 +34,7 @@ class FileSystemButton extends StatelessWidget {
                           bottomRight:
                               checked ? Radius.zero : Radius.circular(4))),
                   padding: EdgeInsets.all(3),
-                  duration: FluentTheme.of(context).mediumAnimationDuration,
+                  duration: Duration(milliseconds: 100),
                   child: Row(
                     children: [
                       Padding(
