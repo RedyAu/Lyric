@@ -20,7 +20,7 @@ class PageTemplate extends StatelessWidget {
         child: Column(
       children: [
         Container(
-          color: Theme.of(context).navigationPanelBackgroundColor,
+          color: FluentTheme.of(context).navigationPaneTheme.backgroundColor,
           height: 41,
           child: Row(
             children: [
@@ -50,8 +50,9 @@ class PageTemplate extends StatelessWidget {
                     Expanded(
                         flex: 2,
                         child: Container(
-                            color: Theme.of(context)
-                                .navigationPanelBackgroundColor,
+                            color: FluentTheme.of(context)
+                                .navigationPaneTheme
+                                .backgroundColor,
                             child: ConstrainedBox(
                                 constraints: BoxConstraints(maxWidth: 400),
                                 child: rightPane!)))

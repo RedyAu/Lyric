@@ -3,6 +3,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:lyric/data/data.dart';
+import 'package:lyric/data/context.dart';
 
 import 'pages/manage.dart';
 import 'pages/songs.dart';
@@ -10,17 +11,8 @@ import 'pages/sets.dart';
 import 'pages/present.dart';
 import 'pages/settings.dart';
 
-//import 'utils/theme.dart';
-
-late bool darkMode;
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // The platforms the plugin support (01/04/2021 - DD/MM/YYYY):
-  //   - Windows
-  //   - Web
-  //   - Android
-  darkMode = true;
   runApp(MyApp());
 }
 
@@ -30,16 +22,26 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FluentApp(
-      style: Style(),
       title: 'Lyric',
       themeMode: ThemeMode.dark,
       debugShowCheckedModeBanner: false,
+      navigatorObservers: [ClearFocusOnPush()],
       initialRoute: '/',
       routes: {
         '/': (_) => MyHomePage(),
       },
-      //style: Style(accentColor: Colors.blue, brightness: Brightness.dark),
+      darkTheme:
+          ThemeData(accentColor: Colors.teal, brightness: Brightness.dark),
     );
+  }
+}
+
+class ClearFocusOnPush extends NavigatorObserver {
+  @override
+  void didPush(Route route, Route? previousRoute) {
+    super.didPush(route, previousRoute);
+    final focus = FocusManager.instance.primaryFocus;
+    focus?.unfocus();
   }
 }
 
@@ -63,65 +65,84 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      left: NavigationPanel(
-        menu: NavigationPanelMenuItem(
-          icon: Icon(FeatherIcons.menu),
-          label: Text('Lyric',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        ),
-        currentIndex: index,
+    return NavigationView(
+      useAcrylic: false,
+      pane: NavigationPane(
+        selected: index,
+        onChanged: (i) => setState(() => index = i),
+        displayMode: PaneDisplayMode.auto,
+        header: Text('Lyric',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         items: [
-          NavigationPanelItem(
+          PaneItem(
             icon: Icon(FeatherIcons.folder),
-            label: Text('Manage'),
-            onTapped: () => setState(() => index = 0),
+            title: 'Manage',
           ),
-          NavigationPanelItem(
+          PaneItem(
             icon: Icon(FeatherIcons.music),
-            label: Text('Songs'),
-            onTapped: () => setState(() => index = 1),
+            title: 'Songs',
           ),
-          NavigationPanelItem(
+          PaneItem(
             icon: Icon(FeatherIcons.columns),
-            label: Text('Sets'),
-            onTapped: () => setState(() => index = 2),
+            title: 'Sets',
           ),
-          NavigationPanelTileSeparator(),
-          NavigationPanelItem(
-              icon: Icon(FeatherIcons.monitor),
-              label: Text('Present'),
-              onTapped: () => setState(() => index = 3)),
+          PaneItemSeparator(),
+          PaneItem(
+            icon: Icon(FeatherIcons.monitor),
+            title: 'Present',
+          )
         ],
-        bottom: NavigationPanelItem(
-          // selected: index == 3,
-          icon: Icon(FeatherIcons.settings),
-          label: Text('Settings'),
-          onTapped: () => setState(() => index = 4),
-        ),
+        footerItems: [
+          PaneItem(
+            icon: Icon(FeatherIcons.settings),
+            title: 'Settings',
+          ),
+        ],
+        /*indicatorBuilder: ({
+          required BuildContext context,
+          int? index,
+          required List<Offset> Function() offsets,
+          required List<Size> Function() sizes,
+          required Axis axis,
+          required Widget child,
+        }) {
+          if (index == null) return child;
+          assert(debugCheckHasFluentTheme(context));
+          final theme = NavigationPaneThemeData.of(context);
+          return StickyNavigationIndicator(
+            index: index,
+            offsets: offsets,
+            sizes: sizes,
+            child: child,
+            color: theme.highlightColor,
+            curve: theme.animationCurve ?? Curves.linear,
+            axis: axis,
+          );
+        },*/
       ),
-      body: Stack(
+      content: NavigationBody(index: index, children: [
+        ManagePage(),
+        SongsPage(),
+        SetsPage(),
+        PresentPage(),
+        SettingsPage()
+      ]),
+      /*Stack(
         children: [
-          NavigationPanelBody(
-              //transitionBuilder: (child, animation) {
-              //  return EntrancePageTransition(
-              //      child: child, animation: animation);
-              //},
-              index: index,
-              children: [
-                ManagePage(),
-                SongsPage(),
-                SetsPage(),
-                PresentPage(),
-                SettingsPage()
-              ]),
+          NavigationBody(index: index, children: [
+            ManagePage(),
+            SongsPage(),
+            SetsPage(),
+            PresentPage(),
+            SettingsPage()
+          ]),
           WindowTitleBarBox(
             child: Row(
               children: [Spacer(), WindowButtons()],
             ),
           ),
         ],
-      ),
+      ),*/
     );
   }
 }

@@ -26,7 +26,11 @@ dependencies:
     sdk: flutter
 
 #  fluentui_system_icons: ^1.1.116
-  fluent_ui: ^1.8.1
+  #fluent_ui: ^1.8.1
+  fluent_ui:
+    git:
+      url: https://github.com/bdlukaa/fluent_ui.git
+      ref: navigation
 
   flutter_feather_icons: ^2.0.0
   provider: ^5.0.0

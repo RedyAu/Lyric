@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lyric/data/data.dart';
+import 'package:lyric/data/context.dart';
 import 'package:lyric/data/fileActions.dart';
 import 'package:lyric/elements/fileSystemButton.dart';
 import 'package:lyric/elements/topRowButton.dart';
@@ -19,19 +20,19 @@ class ManagePage extends StatefulWidget {
 class _ManagePageState extends State<ManagePage> {
   List<Widget> fileWidgets = [];
 
-  var selectedFile;
-  Folder? selectedFolder;
-
   void folderCallback(Folder folder) {
     setState(() {
-      selectedFolder = folder;
-      selectedFile = null;
+      lyric.selectedFolder = folder;
+      lyric.selectedFile = null;
     });
   }
 
   void fileCallback(var file) {
     setState(() {
-      selectedFile = file;
+      lyric.selectedFile = file;
+      if (file is Song)
+        lyric.selectedSong = file;
+      else if (file is Set) lyric.selectedSet = file;
     });
   }
 
@@ -43,8 +44,8 @@ class _ManagePageState extends State<ManagePage> {
       )
     ];
     for (var folder in data.folders) {
-      folderWidgets.add(
-          FileSystemButton(selectedFolder == folder, folder, folderCallback));
+      folderWidgets.add(FileSystemButton(
+          lyric.selectedFolder == folder, folder, folderCallback));
       print("Added " + folder.fileEntity.toString());
     }
 
@@ -55,14 +56,16 @@ class _ManagePageState extends State<ManagePage> {
     print("Build files");
     List<Widget> fileWidgets = [Container(height: 4)];
     for (var song in data.folders
-        .firstWhere((folder) => folder == selectedFolder)
+        .firstWhere((folder) => folder == lyric.selectedFolder)
         .songs) {
-      fileWidgets
-          .add(FileSystemButton(selectedFile == song, song, fileCallback));
+      fileWidgets.add(
+          FileSystemButton(lyric.selectedFile == song, song, fileCallback));
     }
-    for (var set
-        in data.folders.firstWhere((folder) => folder == selectedFolder).sets) {
-      fileWidgets.add(FileSystemButton(selectedFile == set, set, fileCallback));
+    for (var set in data.folders
+        .firstWhere((folder) => folder == lyric.selectedFolder)
+        .sets) {
+      fileWidgets
+          .add(FileSystemButton(lyric.selectedFile == set, set, fileCallback));
     }
     return fileWidgets;
   }
@@ -94,8 +97,8 @@ class _ManagePageState extends State<ManagePage> {
         )
       ],
       rightActions: [
-        selectedFolder != null
-            ? selectedFile != null
+        lyric.selectedFolder != null
+            ? lyric.selectedFile != null
                 ? TopRowButton(
                     text: "Rename file",
                     icon: FeatherIcons.edit3,
@@ -109,12 +112,12 @@ class _ManagePageState extends State<ManagePage> {
                       showDialog(
                           context: context,
                           builder: (context) {
-                            return RenameDialog(toRename: selectedFolder);
+                            return RenameDialog(toRename: lyric.selectedFolder);
                           }).then((renamed) => setState(() {
+                            //TODO nah
                             renamed is Folder
-                                ? selectedFolder = renamed
-                                : selectedFile = renamed;
-                            print(renamed.fileEntity);
+                                ? lyric.selectedFolder = renamed
+                                : lyric.selectedFile = renamed;
                             buildFolders();
                           }));
                     })
@@ -128,15 +131,17 @@ class _ManagePageState extends State<ManagePage> {
             ),
           ),
           AnimatedContainer(
-              duration: Theme.of(context).mediumAnimationDuration!,
+              duration: FluentTheme.of(context).mediumAnimationDuration,
               width: 5,
-              color: selectedFolder != null
+              color: lyric.selectedFolder != null
                   ? Color.fromARGB(255, 80, 80, 80)
-                  : Theme.of(context).navigationPanelBackgroundColor),
+                  : FluentTheme.of(context)
+                      .navigationPaneTheme
+                      .backgroundColor),
           Expanded(
-              child: selectedFolder != null
+              child: lyric.selectedFolder != null
                   ? ListView(
-                      children: buildFiles(selectedFolder!),
+                      children: buildFiles(lyric.selectedFolder!),
                     )
                   : Center(
                       child: Text(
@@ -149,7 +154,7 @@ class _ManagePageState extends State<ManagePage> {
                     ))
         ],
       ),
-      rightPane: selectedFile == null
+      rightPane: lyric.selectedFile == null
           ? Center(
               child: Text(
                 "Choose a file",
@@ -159,7 +164,7 @@ class _ManagePageState extends State<ManagePage> {
                     fontStyle: FontStyle.italic),
               ),
             )
-          : Text(selectedFile.fileEntity.readAsStringSync()),
+          : Text(lyric.selectedFile.fileEntity.readAsStringSync()),
     );
   }
 }

@@ -33,7 +33,7 @@ class FileSystemButton extends StatelessWidget {
                           bottomRight:
                               checked ? Radius.zero : Radius.circular(4))),
                   padding: EdgeInsets.all(3),
-                  duration: Theme.of(context).mediumAnimationDuration!,
+                  duration: FluentTheme.of(context).mediumAnimationDuration,
                   child: Row(
                     children: [
                       Padding(

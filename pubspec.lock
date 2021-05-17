@@ -95,10 +95,12 @@ packages:
   fluent_ui:
     dependency: "direct main"
     description:
-      name: fluent_ui
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.8.1"
+      path: "."
+      ref: navigation
+      resolved-ref: b6ee25608c6c6b56344e7638257982d72b27139c
+      url: "https://github.com/bdlukaa/fluent_ui.git"
+    source: git
+    version: "2.0.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -195,7 +197,7 @@ packages:
       name: source_span
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.1"
+    version: "1.8.0"
   stack_trace:
     dependency: transitive
     description:
@@ -223,7 +225,7 @@ packages:
       name: system_theme
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.1"
   system_theme_web:
     dependency: transitive
     description:

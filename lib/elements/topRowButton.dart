@@ -29,7 +29,7 @@ class TopRowButton extends StatelessWidget {
           Text(text)
         ],
       ),
-      style: ButtonStyle(
+      style: ButtonThemeData(
           decoration: (buttonState) => BoxDecoration(
               color: (color == null)
                   ? Colors.grey.withAlpha(buttonState.isHovering ? 180 : 255)
