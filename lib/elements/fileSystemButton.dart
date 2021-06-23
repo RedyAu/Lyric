@@ -2,6 +2,7 @@ import 'package:lyric/data/data.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:path/path.dart';
+import '../data/song.dart';
 
 class FileSystemButton extends StatelessWidget {
   final bool checked;

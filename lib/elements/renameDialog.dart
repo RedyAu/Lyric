@@ -4,6 +4,7 @@ import 'package:lyric/data/context.dart';
 import 'package:lyric/data/data.dart';
 import 'package:lyric/data/fileActions.dart';
 import 'package:path/path.dart';
+import '../data/song.dart';
 
 class RenameDialog extends StatefulWidget {
   final toRename;
@@ -70,7 +71,7 @@ class _RenameDialogState extends State<RenameDialog> {
                   if (lyric.selectedFolder == null) ;
 
                   Song? toPop = lyric.selectedFolder!.songs.firstWhere(
-                      (s) => s.fileEntity.path == renamedFile!.path);
+                      (s) => s.fileEntity!.path == renamedFile!.path); //TODO make sure fileEntity is not null!
 
                   lyric.setSelectedFile(toPop);
 

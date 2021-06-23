@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:path/path.dart';
+import 'song.dart';
 
 final Directory dataDir = Directory("Lyric"); //TODO Make configurable
 
@@ -37,7 +38,7 @@ Folder buildFolder(Directory dir) {
     File file = File(entity.path);
 
     if (isSong(file)) {
-      songs.add(Song(file));
+      songs.add(Song(fileEntity: file));
     } else if (isSet(file)) {
       sets.add(Set(file));
     }
@@ -60,12 +61,6 @@ class Folder {
   List<Set> sets;
 
   Folder(this.fileEntity, this.songs, this.sets);
-}
-
-class Song {
-  File fileEntity;
-
-  Song(this.fileEntity);
 }
 
 class Set {

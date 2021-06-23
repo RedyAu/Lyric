@@ -15,34 +15,41 @@ class TopRowButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Button(
-      child: Row(
-        children: [
-          if (icon != null)
-            Container(
-              padding: EdgeInsets.only(right: 4),
-              child: Icon(
-                icon,
-                size: 18,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 2),
+      child: Button(
+        child: Row(
+          children: [
+            if (icon != null)
+              Container(
+                padding: EdgeInsets.only(right: 4),
+                child: Icon(
+                  icon,
+                  size: 18,
+                ),
+              ),
+            Text(text)
+          ],
+        ),
+        style: ButtonStyle(
+            border: ButtonState.all(
+              BorderSide(
+                color:
+                    (color == null) ? Colors.grey[120] : color!.withAlpha(150),
               ),
             ),
-          Text(text)
-        ],
+            shape: ButtonState.all(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))),
+            backgroundColor: ButtonState.resolveWith((states) {
+              return (color == null)
+                  ? Colors.grey.withAlpha(states.isHovering ? 180 : 255)
+                  : color!.withAlpha(states.isHovering ? 50 : 80);
+            }),
+            padding: ButtonState.all(EdgeInsets.all(7))),
+        onPressed: () {
+          onPressed();
+        },
       ),
-      style: ButtonThemeData(
-          decoration: (buttonState) => BoxDecoration(
-              color: (color == null)
-                  ? Colors.grey.withAlpha(buttonState.isHovering ? 180 : 255)
-                  : color!.withAlpha(buttonState.isHovering ? 50 : 80),
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(
-                  color: (color == null)
-                      ? Color.fromARGB(255, 100, 100, 100)
-                      : color!.withAlpha(150))),
-          padding: EdgeInsets.all(5.5)),
-      onPressed: () {
-        onPressed();
-      },
     );
   }
 }
