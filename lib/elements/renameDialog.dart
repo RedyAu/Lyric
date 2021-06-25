@@ -51,43 +51,43 @@ class _RenameDialogState extends State<RenameDialog> {
                   : renamedDirectory = renameDirectory(
                       widget.toRename.fileEntity, newNameController!.text);
               //! Return new selected in data structure
-              data.sync().then((_) {
+              data<Data>().sync().then((_) {
                 if (widget.toRename is Folder) {
                   //* Folder was renamed
                   if (renamedDirectory == null) ; //TODO error handling
 
-                  Folder? toPop = data.folders.firstWhere((element) =>
+                  Folder? toPop = data<Data>().folders.firstWhere((element) =>
                       element.fileEntity.path == renamedDirectory!.path);
                   if (toPop == null) ;
-                  lyric.selectedFolder = toPop;
+                  lyric<Lyric>().selectedFolder = toPop;
 
                   Navigator.of(context).pop(toPop);
                 } else if (widget.toRename is Song) {
                   //* Song was renamed
                   if (renamedFile == null) ;
-                  lyric.selectedFolder = data.folders.firstWhere((f) =>
+                  lyric<Lyric>().selectedFolder = data<Data>().folders.firstWhere((f) =>
                       f.fileEntity.path ==
-                      lyric.selectedFolder!.fileEntity.path);
-                  if (lyric.selectedFolder == null) ;
+                      lyric<Lyric>().selectedFolder!.fileEntity.path);
+                  if (lyric<Lyric>().selectedFolder == null) ;
 
-                  Song? toPop = lyric.selectedFolder!.songs.firstWhere(
+                  Song? toPop = lyric<Lyric>().selectedFolder!.songs.firstWhere(
                       (s) => s.fileEntity!.path == renamedFile!.path); //TODO make sure fileEntity is not null!
 
-                  lyric.setSelectedFile(toPop);
+                  lyric<Lyric>().selectedFile = toPop;
 
                   Navigator.of(context).pop(toPop);
                 } else if (widget.toRename is Set) {
                   //* Set was renamed
                   if (renamedFile == null) ;
-                  lyric.selectedFolder = data.folders.firstWhere((f) =>
+                  lyric<Lyric>().selectedFolder = data<Data>().folders.firstWhere((f) =>
                       f.fileEntity.path ==
-                      lyric.selectedFolder!.fileEntity.path);
-                  if (lyric.selectedFolder == null) ;
+                      lyric<Lyric>().selectedFolder!.fileEntity.path);
+                  if (lyric<Lyric>().selectedFolder == null) ;
 
-                  Set? toPop = lyric.selectedFolder!.sets.firstWhere(
+                  Set? toPop = lyric<Lyric>().selectedFolder!.sets.firstWhere(
                       (s) => s.fileEntity.path == renamedFile!.path);
 
-                  lyric.setSelectedFile(toPop);
+                  lyric<Lyric>().selectedFile = toPop;
 
                   Navigator.of(context).pop(toPop);
                 }

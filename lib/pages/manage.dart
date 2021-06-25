@@ -23,14 +23,14 @@ class _ManagePageState extends State<ManagePage> {
 
   void folderCallback(Folder folder) {
     setState(() {
-      lyric.selectedFolder = folder;
-      lyric.selectedFile = null;
+      lyric<Lyric>().selectedFolder = folder;
+      lyric<Lyric>().selectedFile = null;
     });
   }
 
   void fileCallback(var file) {
     setState(() {
-      lyric.setSelectedFile(file);
+      lyric<Lyric>().selectedFile = file;
     });
   }
 
@@ -41,9 +41,9 @@ class _ManagePageState extends State<ManagePage> {
         height: 4,
       )
     ];
-    for (var folder in data.folders) {
+    for (var folder in data<Data>().folders) {
       folderWidgets.add(FileSystemButton(
-          lyric.selectedFolder == folder, folder, folderCallback));
+          lyric<Lyric>().selectedFolder == folder, folder, folderCallback));
     }
     setState(() {
       this.folderWidgets = folderWidgets;
@@ -53,17 +53,19 @@ class _ManagePageState extends State<ManagePage> {
 
   List<Widget> buildFiles(Folder inFolder) {
     List<Widget> fileWidgets = [Container(height: 4)];
-    for (var song in data.folders
-        .firstWhere((folder) => folder == lyric.selectedFolder)
+    for (var song in data<Data>()
+        .folders
+        .firstWhere((folder) => folder == lyric<Lyric>().selectedFolder)
         .songs) {
-      fileWidgets.add(
-          FileSystemButton(lyric.selectedFile == song, song, fileCallback));
+      fileWidgets.add(FileSystemButton(
+          lyric<Lyric>().selectedFile == song, song, fileCallback));
     }
-    for (var set in data.folders
-        .firstWhere((folder) => folder == lyric.selectedFolder)
+    for (var set in data<Data>()
+        .folders
+        .firstWhere((folder) => folder == lyric<Lyric>().selectedFolder)
         .sets) {
-      fileWidgets
-          .add(FileSystemButton(lyric.selectedFile == set, set, fileCallback));
+      fileWidgets.add(FileSystemButton(
+          lyric<Lyric>().selectedFile == set, set, fileCallback));
     }
     return fileWidgets;
   }
@@ -94,21 +96,21 @@ class _ManagePageState extends State<ManagePage> {
         )
       ],
       rightActions: [
-        lyric.selectedFolder != null
-            ? lyric.selectedFile != null
+        lyric<Lyric>().selectedFolder != null
+            ? lyric<Lyric>().selectedFile != null
                 ? TopRowButton(
                     text: "Rename file",
                     icon: FeatherIcons.edit3,
                     color: Colors.green,
                     onPressed: () {
-                      showRenameDialog(context, lyric.selectedFile);
+                      showRenameDialog(context, lyric<Lyric>().selectedFile);
                     })
                 : TopRowButton(
                     text: "Rename folder",
                     icon: FeatherIcons.edit,
                     color: Colors.teal,
                     onPressed: () {
-                      showRenameDialog(context, lyric.selectedFolder);
+                      showRenameDialog(context, lyric<Lyric>().selectedFolder);
                     })
             : Container()
       ],
@@ -130,13 +132,14 @@ class _ManagePageState extends State<ManagePage> {
                   AnimatedContainer(
                       duration: FluentTheme.of(context).mediumAnimationDuration,
                       width: 5,
-                      color: lyric.selectedFolder != null
+                      color: lyric<Lyric>().selectedFolder != null
                           ? Colors.grey[130]
                           : Colors.grey[200]),
                   Expanded(
-                      child: lyric.selectedFolder != null
+                      child: lyric<Lyric>().selectedFolder != null
                           ? ListView(
-                              children: buildFiles(lyric.selectedFolder!),
+                              children:
+                                  buildFiles(lyric<Lyric>().selectedFolder!),
                             )
                           : Center(
                               child: Text(
@@ -154,7 +157,7 @@ class _ManagePageState extends State<ManagePage> {
                 flex: 1,
                 child: Container(
                   color: Colors.grey[200],
-                  child: lyric.selectedFile == null
+                  child: lyric<Lyric>().selectedFile == null
                       ? Center(
                           child: Text(
                             "Choose a file",
@@ -164,7 +167,10 @@ class _ManagePageState extends State<ManagePage> {
                                 fontStyle: FontStyle.italic),
                           ),
                         )
-                      : Text(lyric.selectedFile.fileEntity.readAsStringSync()),
+                      : Text(lyric<Lyric>()
+                          .selectedFile
+                          .fileEntity
+                          .readAsStringSync()),
                 )),
           ],
         ),

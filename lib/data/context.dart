@@ -1,31 +1,47 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:lyric/data/data.dart';
+import 'package:flutter/foundation.dart';
+import 'data.dart';
 import 'song.dart';
 import 'dart:io';
+import 'package:get_it/get_it.dart';
 
-AppContext lyric = AppContext();
+//AppContext lyric = AppContext();
 
-class AppContext {
-  //* Scroll controllers
+final lyric = GetIt.instance;
+
+void lyricInit() {
+  lyric.registerSingleton<Lyric>(Lyric());
+  lyric.registerSingleton<Data>(Data());
+}
+
+class Lyric extends ChangeNotifier {
+  /* //Scroll controllers
   ScrollController manageFoldersController = ScrollController();
-  ScrollController manageFilesController = ScrollController();
+  ScrollController manageFilesController = ScrollController(); */
 
   //* Selecteds
-  /// #### For editing on sets page
-  Set? selectedSet;
-
   /// #### For editing on songs page
-  Song? selectedSong;
+  ValueNotifier<Song?> selectedSong = ValueNotifier(null);
+
+  /// #### For editing on sets page
+  ValueNotifier<Set?> selectedSet = ValueNotifier(null);
+  //Set? _selectedSet;
 
   /// #### For display on manage page
   /// #### Update displayed file on manage page, and edited file on the corresponding edit page
   var _selectedFile;
-  FileSystemEntity get selectedFile => _selectedFile;
-  set selectedFile(FileSystemEntity newFile) {
+  get selectedFile => _selectedFile;
+  set selectedFile(var newFile) {
+    print("HALO SETTER JE");
+    print(selectedSong.value ?? Song(title: "null song"));
     _selectedFile = newFile;
-    if (newFile is Song)
-      this.selectedSong = newFile;
-    else if (newFile is Set) this.selectedSet = newFile;
+    if (newFile is Song) {
+      this.selectedSong.value = newFile;
+    } else if (newFile is Set) {
+      this.selectedSet.value = newFile;
+    }
+    //TODO add theme and etc
+    notifyListeners();
   }
 
   /// #### For display on manage page

@@ -1,12 +1,14 @@
+import 'dart:io';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:lyric/elements/nonClickablePaneItem.dart';
 import 'package:path/path.dart';
 
 import 'package:lyric/data/data.dart';
-import 'package:provider/provider.dart';
 
 import 'data/data.dart';
 import 'data/context.dart';
@@ -15,11 +17,11 @@ import 'pages/songs/page.dart';
 import 'pages/sets.dart';
 import 'pages/present.dart';
 import 'pages/settings.dart';
-import 'data/context.dart';
 import 'data/song.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  lyricInit();
   runApp(MyApp());
 }
 
@@ -52,14 +54,14 @@ class ClearFocusOnPush extends NavigatorObserver {
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class MyHomePage extends StatefulWidget with GetItStatefulWidgetMixin {
+  MyHomePage({Key? key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with GetItStateMixin {
   bool value = false;
 
   bool ready = false;
@@ -68,99 +70,102 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    data.sync().then((value) => setState(() {
+    data<Data>().sync().then((value) => setState(() {
           ready = true;
         }));
     super.initState();
   }
 
   @override
+  int built = 0;
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (context) => SongNotifier())],
-      child: Stack(
-        children: [
-          !ready
-              ? Center(
-                  child: ProgressRing(),
-                )
-              : NavigationView(
-                  useAcrylic: false,
-                  pane: NavigationPane(
-                    displayMode: PaneDisplayMode.open,
-                    selected: index,
-                    onChanged: (i) => setState(() => index = i),
-                    header: Stack(
-                      children: [
-                        Center(
-                          child: Text('Lyric',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold)),
-                        ),
-                        MoveWindow(),
-                      ],
-                    ),
-                    items: [
-                      PaneItem(
-                        icon: Icon(FeatherIcons.folder),
-                        title: Text('Manage'),
+    final Song? selectedSong = watchX((Lyric x) => x.selectedSong);
+
+    built++;
+
+    return Stack(
+      children: [
+        !ready
+            ? Center(
+                child: ProgressRing(),
+              )
+            : NavigationView(
+                useAcrylic: false,
+                pane: NavigationPane(
+                  displayMode: PaneDisplayMode.open,
+                  selected: index,
+                  onChanged: (i) => setState(() => index = i),
+                  header: Stack(
+                    children: [
+                      Center(
+                        child: Text('Lyric',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
                       ),
-                      PaneItem(
-                        icon: Icon(FeatherIcons.music),
-                        title: Text(
-                            'Songs' /*  +
+                      MoveWindow(),
+                    ],
+                  ),
+                  items: [
+                    PaneItem(
+                      icon: Icon(FeatherIcons.folder),
+                      title: Text('Manage'),
+                    ),
+                    PaneItem(
+                      icon: Icon(FeatherIcons.music),
+                      title: Text(
+                          'Songs' /*  +
                             ((lyric.selectedSong == null)
                                 ? ""
                                 : "\nSelected: " +
                                     basenameWithoutExtension(
                                         lyric.selectedSong!.fileEntity.path)) */
-                            ),
-                      ),
-                      NonClickablePaneItem(Consumer<SongNotifier>(
-                          builder: (context, songListener, child) {
-                        return Text(songListener.title);
-                      })),
-                      PaneItem(
-                        icon: Icon(FeatherIcons.columns),
-                        title: Text('Sets'),
-                      ),
-                      PaneItemSeparator(),
-                      PaneItem(
-                        icon: Icon(FeatherIcons.monitor),
-                        title: Text('Present'),
-                      )
-                    ],
-                    footerItems: [
-                      PaneItem(
-                        icon: Icon(FeatherIcons.settings),
-                        title: Text('Settings'),
-                      ),
-                    ],
-                  ),
-                  content: NavigationBody(index: index, children: [
-                    ManagePage(),
-                    SongsPage(),
-                    SetsPage(),
-                    PresentPage(),
-                    SettingsPage()
-                  ]),
+                          ),
+                    ),
+                    NonClickablePaneItem(Text(
+                        (selectedSong ?? Song(fileEntity: File("No Song")))
+                            .fileEntity!
+                            .path)), //TODO watcher
+                    NonClickablePaneItem(Text(built.toString())),
+                    PaneItem(
+                      icon: Icon(FeatherIcons.columns),
+                      title: Text('Sets'),
+                    ),
+                    PaneItemSeparator(),
+                    PaneItem(
+                      icon: Icon(FeatherIcons.monitor),
+                      title: Text('Present'),
+                    )
+                  ],
+                  footerItems: [
+                    PaneItem(
+                      icon: Icon(FeatherIcons.settings),
+                      title: Text('Settings'),
+                    ),
+                  ],
                 ),
-          Container(
-            child: Container(
-              height: 40,
-              child: Row(
-                children: [
-                  Spacer(),
-                  Align(
-                    child: WindowButtons(),
-                    alignment: Alignment.topRight,
-                  )
-                ],
+                content: NavigationBody(index: index, children: [
+                  ManagePage(),
+                  SongsPage(),
+                  SetsPage(),
+                  PresentPage(),
+                  SettingsPage()
+                ]),
               ),
+        Container(
+          child: Container(
+            height: 40,
+            child: Row(
+              children: [
+                Spacer(),
+                Align(
+                  child: WindowButtons(),
+                  alignment: Alignment.topRight,
+                )
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

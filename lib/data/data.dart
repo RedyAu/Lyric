@@ -1,10 +1,11 @@
 import 'dart:io';
 import 'package:path/path.dart';
+import 'package:get_it/get_it.dart';
 import 'song.dart';
 
 final Directory dataDir = Directory("Lyric"); //TODO Make configurable
 
-Data data = Data();
+final data = GetIt.instance;
 
 class Data {
   List<Folder> folders = [];
@@ -48,6 +49,7 @@ Folder buildFolder(Directory dir) {
 }
 
 bool isSong(File file) {
+  //TODO make depend on XML
   return (extension(file.path) == ".lsong");
 }
 
