@@ -46,8 +46,8 @@ class _RenameDialogState extends State<RenameDialog> {
             onPressed: () {
               //! Rename
               widget.toRename.fileEntity is File
-                  ? renamedFile = renameFile(
-                      widget.toRename.fileEntity, newNameController!.text)
+                  ? renamedFile =
+                      renameFile(widget.toRename.fileEntity, newNameController!.text)
                   : renamedDirectory = renameDirectory(
                       widget.toRename.fileEntity, newNameController!.text);
               //! Return new selected in data structure
@@ -65,13 +65,18 @@ class _RenameDialogState extends State<RenameDialog> {
                 } else if (widget.toRename is Song) {
                   //* Song was renamed
                   if (renamedFile == null) ;
-                  lyric<Lyric>().selectedFolder = data<Data>().folders.firstWhere((f) =>
-                      f.fileEntity.path ==
-                      lyric<Lyric>().selectedFolder!.fileEntity.path);
+                  lyric<Lyric>().selectedFolder = data<Data>()
+                      .folders
+                      .firstWhere((f) =>
+                          f.fileEntity.path ==
+                          lyric<Lyric>().selectedFolder!.fileEntity.path);
                   if (lyric<Lyric>().selectedFolder == null) ;
 
                   Song? toPop = lyric<Lyric>().selectedFolder!.songs.firstWhere(
-                      (s) => s.fileEntity!.path == renamedFile!.path); //TODO make sure fileEntity is not null!
+                      (s) =>
+                          s.fileEntity.path ==
+                          renamedFile!
+                              .path); //TODO make sure fileEntity is not null!
 
                   lyric<Lyric>().selectedFile = toPop;
 
@@ -79,9 +84,11 @@ class _RenameDialogState extends State<RenameDialog> {
                 } else if (widget.toRename is Set) {
                   //* Set was renamed
                   if (renamedFile == null) ;
-                  lyric<Lyric>().selectedFolder = data<Data>().folders.firstWhere((f) =>
-                      f.fileEntity.path ==
-                      lyric<Lyric>().selectedFolder!.fileEntity.path);
+                  lyric<Lyric>().selectedFolder = data<Data>()
+                      .folders
+                      .firstWhere((f) =>
+                          f.fileEntity.path ==
+                          lyric<Lyric>().selectedFolder!.fileEntity.path);
                   if (lyric<Lyric>().selectedFolder == null) ;
 
                   Set? toPop = lyric<Lyric>().selectedFolder!.sets.firstWhere(

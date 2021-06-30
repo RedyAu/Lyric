@@ -122,9 +122,11 @@ class _MyHomePageState extends State<MyHomePage> with GetItStateMixin {
                           ),
                     ),
                     NonClickablePaneItem(Text(
+                        /*
                         (selectedSong ?? Song(fileEntity: File("No Song")))
                             .fileEntity!
-                            .path)), //TODO watcher
+                            .path*/
+                        "helloka")),
                     NonClickablePaneItem(Text(built.toString())),
                     PaneItem(
                       icon: Icon(FeatherIcons.columns),

@@ -4,6 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lyric/data/data.dart';
 import 'package:lyric/data/context.dart';
 import 'package:lyric/data/fileActions.dart';
+import 'package:lyric/data/song.dart';
 import 'package:lyric/elements/fileSystemButton.dart';
 import 'package:lyric/elements/renameDialog.dart';
 import 'package:lyric/elements/topRowButton.dart';
@@ -30,7 +31,11 @@ class _ManagePageState extends State<ManagePage> {
 
   void fileCallback(var file) {
     setState(() {
-      lyric<Lyric>().selectedFile = file;
+      if (file is Song) {
+        lyric<Lyric>().selectedFile = Song.fromFile(file.fileEntity);
+      } else {
+        lyric<Lyric>().selectedFile = file;
+      }
     });
   }
 

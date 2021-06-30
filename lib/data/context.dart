@@ -33,7 +33,7 @@ class Lyric extends ChangeNotifier {
   get selectedFile => _selectedFile;
   set selectedFile(var newFile) {
     print("HALO SETTER JE");
-    print(selectedSong.value ?? Song(title: "null song"));
+    //print(selectedSong.value ?? Song(title: "null song"));
     _selectedFile = newFile;
     if (newFile is Song) {
       this.selectedSong.value = newFile;
